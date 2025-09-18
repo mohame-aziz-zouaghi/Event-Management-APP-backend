@@ -3,8 +3,10 @@ package tn.esprit.examen.EventManagement.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tn.esprit.examen.EventManagement.entities.Event;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor

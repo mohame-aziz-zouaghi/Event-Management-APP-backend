@@ -7,9 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -44,4 +42,16 @@ public class User implements Serializable {
 
     @Enumerated(EnumType.STRING)
     Role role; // e.g. ADMIN, USER, ORGANIZER
+
+    @OneToMany(mappedBy = "organizer")
+    private List<Event> organizedEvents = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_participants",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    private List<Event> participatingEvents = new ArrayList<>();
+
 }

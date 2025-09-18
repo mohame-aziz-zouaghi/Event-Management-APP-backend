@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import tn.esprit.examen.EventManagement.entities.Event;
+
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -30,4 +33,6 @@ public class UserUpdateDTO {
     private Date dateOfBirth;
     private String genre;
     private String role;
+    private List<Event> organizedEvents;
+    private List<Event> participatingEvents;
 }

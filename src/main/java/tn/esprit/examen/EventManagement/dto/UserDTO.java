@@ -2,9 +2,11 @@ package tn.esprit.examen.EventManagement.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import tn.esprit.examen.EventManagement.entities.Event;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +22,6 @@ public class UserDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
     private String genre;
+    private List<EventSummaryDTO> organizedEvents;
+    private List<EventSummaryDTO> participatingEvents;
 }

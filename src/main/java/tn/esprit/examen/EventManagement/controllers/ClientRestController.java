@@ -3,6 +3,7 @@ package tn.esprit.examen.EventManagement.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.examen.EventManagement.dto.RegisterRequestDTO;
 import tn.esprit.examen.EventManagement.dto.UserDTO;
 import tn.esprit.examen.EventManagement.dto.UserMapper;
 import tn.esprit.examen.EventManagement.dto.UserUpdateDTO;
@@ -20,7 +21,7 @@ public class ClientRestController {
 
     // ➕ Create
     @PostMapping("/add")
-    public UserDTO addUser(@RequestBody User user) {
+    public UserDTO addUser(@RequestBody RegisterRequestDTO user) {
         return UserMapper.toDTO(userService.add(user));
     }
 

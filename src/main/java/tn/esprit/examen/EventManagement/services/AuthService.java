@@ -11,6 +11,8 @@ import tn.esprit.examen.EventManagement.entities.Role;
 import tn.esprit.examen.EventManagement.entities.User;
 import tn.esprit.examen.EventManagement.repositories.IUserRepository;
 
+import java.util.ArrayList;
+
 @Service
 public class AuthService {
 
@@ -43,6 +45,8 @@ public class AuthService {
         user.setDateOfBirth(dto.getDateOfBirth());
         user.setGenre(Genre.valueOf(dto.getGenre()));
         user.setRole(Role.USER);
+        user.setOrganizedEvents(new ArrayList<>());
+        user.setParticipatingEvents(new ArrayList<>());
 
         return userRepository.save(user);
     }
