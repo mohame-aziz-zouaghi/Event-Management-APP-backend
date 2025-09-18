@@ -46,12 +46,9 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "organizer")
     private List<Event> organizedEvents = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_participants",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id")
-    )
-    private List<Event> participatingEvents = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservations = new ArrayList<>();
+
+
 
 }

@@ -1,7 +1,8 @@
 package tn.esprit.examen.EventManagement.dto;
 
 import tn.esprit.examen.EventManagement.entities.User;
-import tn.esprit.examen.EventManagement.mappers.EventMapper;
+
+import java.util.stream.Collectors;
 
 public class UserMapper {
     public static UserDTO toDTO(User user) {
@@ -15,7 +16,7 @@ public class UserMapper {
                 .dateOfBirth(user.getDateOfBirth())
                 .genre(user.getGenre().name())
                 .organizedEvents(EventMapper.toSummaryDTOList(user.getOrganizedEvents()))
-                .participatingEvents(EventMapper.toSummaryDTOList(user.getParticipatingEvents()))
+                .reservations(user.getReservations().stream().map(ReservationMapper::toDTO).collect(Collectors.toList()))
                 .build();
     }
 }

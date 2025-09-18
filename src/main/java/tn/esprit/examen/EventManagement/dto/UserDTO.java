@@ -23,5 +23,5 @@ public class UserDTO {
     private Date dateOfBirth;
     private String genre;
     private List<EventSummaryDTO> organizedEvents;
-    private List<EventSummaryDTO> participatingEvents;
+    private List<ReservationDTO> reservations;
 }

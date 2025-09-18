@@ -38,7 +38,7 @@ public class ServicesUserImpl implements IServicesUser {
         user.setGenre(Genre.valueOf(dto.getGenre()));
         user.setRole(Role.USER);
         user.setOrganizedEvents(new ArrayList<>());
-        user.setParticipatingEvents(new ArrayList<>());
+        user.setReservations(new ArrayList<>());
 
         return userRepository.save(user);
     }
@@ -57,7 +57,7 @@ public class ServicesUserImpl implements IServicesUser {
         if (dto.getGenre() != null) user.setGenre(Enum.valueOf(Genre.class, dto.getGenre()));
         if (dto.getRole() != null) user.setRole(Enum.valueOf(Role.class, dto.getRole()));
         if (dto.getOrganizedEvents() != null) user.setOrganizedEvents(dto.getOrganizedEvents());
-        if (dto.getParticipatingEvents() != null) user.setParticipatingEvents(dto.getParticipatingEvents());
+        if (dto.getReservations() != null) user.setReservations(dto.getReservations());
         return userRepository.save(user);
     }
 

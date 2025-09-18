@@ -3,6 +3,7 @@ package tn.esprit.examen.EventManagement.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.examen.EventManagement.dto.EventDTO;
+import tn.esprit.examen.EventManagement.dto.ReservationMapper;
 import tn.esprit.examen.EventManagement.entities.Event;
 import tn.esprit.examen.EventManagement.entities.User;
 import tn.esprit.examen.EventManagement.repositories.IEventRepository;
@@ -116,7 +117,12 @@ public class EventService {
                 event.getEndDate(),
                 event.getOrganizer() != null ? event.getOrganizer().getId() : null,
                 event.getCreatedAt(),
-                event.getUpdatedAt()
+                event.getUpdatedAt(),
+                event.getReservations() != null
+                        ? event.getReservations().stream()
+                        .map(ReservationMapper::toDTO)
+                        .collect(Collectors.toList())
+                        : List.of()
         );
     }
 }

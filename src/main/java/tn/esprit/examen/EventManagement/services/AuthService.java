@@ -46,7 +46,7 @@ public class AuthService {
         user.setGenre(Genre.valueOf(dto.getGenre()));
         user.setRole(Role.USER);
         user.setOrganizedEvents(new ArrayList<>());
-        user.setParticipatingEvents(new ArrayList<>());
+        user.setReservations(new ArrayList<>());
 
         return userRepository.save(user);
     }

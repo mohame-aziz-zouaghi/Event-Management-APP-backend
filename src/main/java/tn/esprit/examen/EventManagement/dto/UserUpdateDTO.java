@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import tn.esprit.examen.EventManagement.entities.Event;
+import tn.esprit.examen.EventManagement.entities.Reservation;
 
 import java.util.Date;
 import java.util.List;
@@ -34,5 +35,5 @@ public class UserUpdateDTO {
     private String genre;
     private String role;
     private List<Event> organizedEvents;
-    private List<Event> participatingEvents;
+    private List<Reservation> reservations;
 }

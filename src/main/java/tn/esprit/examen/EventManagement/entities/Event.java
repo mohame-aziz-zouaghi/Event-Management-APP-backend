@@ -41,9 +41,8 @@ public class Event {
     @JoinColumn(name = "organizer_id")
     private User organizer;
 
-    @ManyToMany(mappedBy = "participatingEvents")
-    private List<User> participants = new ArrayList<>();
-
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<Reservation> reservations = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
