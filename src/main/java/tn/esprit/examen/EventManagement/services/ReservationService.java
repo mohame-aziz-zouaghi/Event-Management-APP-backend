@@ -46,6 +46,8 @@ public class ReservationService {
                 .reservationDate(LocalDateTime.now())
                 .status(ReservationStatus.PENDING)
                 .ticketNumber("TICKET-" + System.currentTimeMillis())
+                .username(user.getUsername())
+                .eventTitle(event.getTitle())
                 .build();
 
         return ReservationMapper.toDTO(reservationRepository.save(reservation));
