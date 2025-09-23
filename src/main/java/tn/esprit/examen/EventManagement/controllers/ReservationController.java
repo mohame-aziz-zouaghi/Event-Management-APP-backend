@@ -9,7 +9,7 @@ import tn.esprit.examen.EventManagement.services.ReservationService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservations")
+@RequestMapping("/api/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
 
