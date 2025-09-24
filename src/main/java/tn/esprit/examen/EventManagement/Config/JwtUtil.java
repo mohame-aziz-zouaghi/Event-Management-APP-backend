@@ -18,9 +18,10 @@ public class JwtUtil {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
-    public String generateToken(String username, Role role) {
+    public String generateToken(String username, Role role , Long userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role.name());
+        claims.put("userId", userId);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -37,6 +38,17 @@ public class JwtUtil {
 
     public String extractRole(String token) {
         return (String) extractAllClaims(token).get("role");
+    }
+    // New method to extract userId
+    public Long extractUserId(String token) {
+        Object userId = extractAllClaims(token).get("userId");
+        if (userId instanceof Integer) {
+            return ((Integer) userId).longValue();
+        } else if (userId instanceof Long) {
+            return (Long) userId;
+        } else {
+            return null;
+        }
     }
 
     public boolean isTokenValid(String token, String username) {

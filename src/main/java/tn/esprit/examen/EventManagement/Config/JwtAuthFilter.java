@@ -40,11 +40,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
         String username = jwtUtil.extractUsername(token);
         String role = jwtUtil.extractRole(token);
+        Long userId = jwtUtil.extractUserId(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             User user = new User();
             user.setUsername(username);
             user.setRole(Role.valueOf(role));
+            user.setId(userId);
 
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(
