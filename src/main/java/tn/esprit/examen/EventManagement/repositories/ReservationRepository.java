@@ -12,4 +12,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByUser_UsernameContainingIgnoreCase(String username);
 
     List<Reservation> findByEvent_TitleContainingIgnoreCase(String title);
+    boolean existsByUserIdAndEventId(Long userId, Long eventId);
+
 }

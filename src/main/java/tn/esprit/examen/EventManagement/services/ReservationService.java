@@ -34,6 +34,12 @@ public class ReservationService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
+        // Check if the user already reserved this event
+        boolean alreadyReserved = reservationRepository.existsByUserIdAndEventId(userId, eventId);
+        if (alreadyReserved) {
+            throw new RuntimeException("You have already reserved a spot for this event");
+        }
+
         // Check capacity
         long reservedCount = reservationRepository.findByEventId(eventId).size();
         if (reservedCount >= event.getCapacity()) {
@@ -52,6 +58,7 @@ public class ReservationService {
 
         return ReservationMapper.toDTO(reservationRepository.save(reservation));
     }
+
 
     public List<ReservationDTO> getReservationsByUser(Long userId) {
         return reservationRepository.findByUserId(userId).stream()
