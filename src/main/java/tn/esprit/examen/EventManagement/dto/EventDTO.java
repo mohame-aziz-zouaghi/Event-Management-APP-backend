@@ -23,5 +23,6 @@ public class EventDTO {
     private LocalDateTime CreateAt;// Link to User who organizes
     private LocalDateTime updatedAt;// Link to User who organizes
     private List<ReservationDTO> reservations;
+    private List<String> photoUrls;
 
 }

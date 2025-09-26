@@ -1,6 +1,7 @@
 package tn.esprit.examen.EventManagement.dto;
 
 import tn.esprit.examen.EventManagement.entities.Event;
+import tn.esprit.examen.EventManagement.entities.EventPhoto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,9 @@ public class EventMapper {
                         ? event.getReservations().stream()
                         .map(ReservationMapper::toDTO)
                         .collect(Collectors.toList())
+                        : List.of(),
+                event.getPhotos() != null
+                        ? event.getPhotos().stream().map(EventPhoto::getUrl).collect(Collectors.toList())
                         : List.of()
         );
     }

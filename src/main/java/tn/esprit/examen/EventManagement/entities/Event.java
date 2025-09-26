@@ -1,5 +1,6 @@
 package tn.esprit.examen.EventManagement.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
@@ -29,11 +30,14 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime startDate;
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endDate;
 
     private int capacity;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime updatedAt;
 
     // ✅ Organizer (User)
@@ -43,6 +47,9 @@ public class Event {
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventPhoto> photos = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
