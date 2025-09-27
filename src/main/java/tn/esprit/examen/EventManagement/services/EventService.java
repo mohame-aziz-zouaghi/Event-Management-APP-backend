@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,10 +165,99 @@ public class EventService {
         return mapToDTO(updated);
     }
 
+    public EventDTO UpdateEventphoto(Long id, EventDTO dto, List<MultipartFile> photos) throws IOException {
+        // Load the current event to get existing photos
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        // Existing photo URLs
+        List<String> existingUrls = event.getPhotos() == null
+                ? new ArrayList<>()
+                : event.getPhotos().stream()
+                .map(EventPhoto::getUrl)
+                .collect(Collectors.toList());
+
+        // URLs the user wants to keep (from the DTO)
+        List<String> keptUrls = dto.getPhotoUrls() != null
+                ? new ArrayList<>(dto.getPhotoUrls())
+                : new ArrayList<>(existingUrls);
+
+        // Determine which existing photos were removed
+        List<String> removedUrls = existingUrls.stream()
+                .filter(url -> !keptUrls.contains(url))
+                .collect(Collectors.toList());
+
+        // Remove deleted photos from DB and disk
+        for (String url : removedUrls) {
+            event.getPhotos().removeIf(p -> p.getUrl().equals(url));
+
+            // Delete file from disk
+            Path path = Paths.get("src/main/resources/static" + url);
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                System.err.println("Failed to delete old photo: " + path + " -> " + e.getMessage());
+            }
+        }
+
+        // Save new photos (if any) and build URLs
+        if (photos != null && !photos.isEmpty()) {
+            List<String> newPhotoUrls = new ArrayList<>();
+            Path uploadDir = Paths.get("src/main/resources/static/events");
+            Files.createDirectories(uploadDir);
+
+            for (MultipartFile file : photos) {
+                if (file.isEmpty()) continue;
+
+                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path filePath = uploadDir.resolve(fileName);
+
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                newPhotoUrls.add("/events/" + fileName);
+            }
+
+            // Merge kept + new URLs
+            keptUrls.addAll(newPhotoUrls);
+        }
+
+        // Limit total photos to 5
+        if (keptUrls.size() > 5) {
+            throw new IllegalArgumentException("You can upload a maximum of 5 photos per event");
+        }
+
+        // Update DTO with final URLs
+        dto.setPhotoUrls(keptUrls);
+
+        // Delegate to existing update method
+        return updateEvent(id, dto);
+    }
+
+
+
+
+
+
+
+
+
     // Delete Event
     public void deleteEvent(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        // Delete associated photos from disk
+        if (event.getPhotos() != null && !event.getPhotos().isEmpty()) {
+            for (EventPhoto photo : event.getPhotos()) {
+                Path path = Paths.get("src/main/resources/static" + photo.getUrl());
+                try {
+                    Files.deleteIfExists(path);
+                } catch (IOException e) {
+                    System.err.println("Failed to delete photo: " + path + " -> " + e.getMessage());
+                }
+            }
+        }
+
+        // Delete the event from the database
         eventRepository.delete(event);
     }
 

@@ -9,6 +9,7 @@ public class UserMapper {
         if (user == null) return null;
 
         return UserDTO.builder()
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .username(user.getUsername())
@@ -17,6 +18,7 @@ public class UserMapper {
                 .genre(user.getGenre().name())
                 .organizedEvents(EventMapper.toSummaryDTOList(user.getOrganizedEvents()))
                 .reservations(user.getReservations().stream().map(ReservationMapper::toDTO).collect(Collectors.toList()))
+                .profilePicture(user.getProfilePicture())
                 .build();
     }
 }

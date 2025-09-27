@@ -20,4 +20,5 @@ public class RegisterRequestDTO {
     private String password;
     private String genre;
     private String role = "USER"; // optional, defaults to USER if null
+    private String profilePicture;
 }

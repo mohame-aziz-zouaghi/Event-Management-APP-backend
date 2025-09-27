@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class UserDTO {
+    private Long id;
     private String firstName;
     private String lastName;
     private String username;
@@ -24,4 +25,5 @@ public class UserDTO {
     private String genre;
     private List<EventSummaryDTO> organizedEvents;
     private List<ReservationDTO> reservations;
+    private String profilePicture;
 }

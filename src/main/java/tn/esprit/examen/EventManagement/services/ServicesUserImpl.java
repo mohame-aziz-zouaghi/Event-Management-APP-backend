@@ -4,12 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.examen.EventManagement.dto.RegisterRequestDTO;
 import tn.esprit.examen.EventManagement.dto.UserDTO;
 import tn.esprit.examen.EventManagement.dto.UserUpdateDTO;
 import tn.esprit.examen.EventManagement.entities.*;
 import tn.esprit.examen.EventManagement.repositories.IUserRepository;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +29,7 @@ public class ServicesUserImpl implements IServicesUser {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User add(RegisterRequestDTO dto) {
+    public User add(RegisterRequestDTO dto, MultipartFile profilePicture) throws IOException {
         if(userRepository.existsByUsername(dto.getUsername())) {
             throw new RuntimeException("Username already taken");
         }
@@ -39,6 +45,15 @@ public class ServicesUserImpl implements IServicesUser {
         user.setRole(Role.USER);
         user.setOrganizedEvents(new ArrayList<>());
         user.setReservations(new ArrayList<>());
+
+        // ✅ Handle profile picture
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            String fileName = System.currentTimeMillis() + "_" + profilePicture.getOriginalFilename();
+            Path path = Paths.get("src/main/resources/static/users/" + fileName);
+            Files.createDirectories(path.getParent());
+            Files.copy(profilePicture.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            user.setProfilePicture("/users/" + fileName);
+        }
 
         return userRepository.save(user);
     }

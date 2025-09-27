@@ -2,6 +2,7 @@ package tn.esprit.examen.EventManagement.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,9 +48,13 @@ public class EventController {
     }
 
     // ✅ Update Event
-    @PutMapping("/update/{id}")
-    public ResponseEntity<EventDTO> updateEvent(@PathVariable Long id, @RequestBody EventDTO dto) {
-        return ResponseEntity.ok(eventService.updateEvent(id, dto));
+    @PutMapping(value = "/update/{id}", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<EventDTO> updateEvent(
+            @PathVariable Long id,
+            @RequestPart("event") EventDTO dto,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos) throws IOException {
+
+        return ResponseEntity.ok(eventService.UpdateEventphoto(id, dto, photos));
     }
 
     // ✅ Delete Event
