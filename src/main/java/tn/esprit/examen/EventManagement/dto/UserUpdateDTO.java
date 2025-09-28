@@ -36,4 +36,5 @@ public class UserUpdateDTO {
     private String role;
     private List<Event> organizedEvents;
     private List<Reservation> reservations;
+    private String profilePicture;
 }

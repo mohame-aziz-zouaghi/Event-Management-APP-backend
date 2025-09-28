@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface IServicesUser {
     User add(RegisterRequestDTO user , MultipartFile profilePicture) throws IOException;
-    User updateUser(Long id, UserUpdateDTO user);
+    User updateUser(Long id, UserUpdateDTO user,MultipartFile profilePicture) throws IOException;
     String deleteUser(Long id);
     User getUserById(Long id);
     List<User> getAllUsers();

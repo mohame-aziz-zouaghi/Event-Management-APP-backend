@@ -10,7 +10,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Map /events/** to the physical folder in your project
-        registry.addResourceHandler("/events/**")
+        registry.addResourceHandler("/events/**","/users/**")
                 .addResourceLocations("file:src/main/resources/static/events/")
                 .addResourceLocations("file:src/main/resources/static/users/");
     }

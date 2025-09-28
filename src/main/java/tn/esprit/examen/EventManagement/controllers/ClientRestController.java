@@ -32,8 +32,13 @@ public class ClientRestController {
 
     // ✏️ Update
     @PutMapping("/update/{id}")
-    public UserDTO updateUser(@PathVariable Long id, @RequestBody UserUpdateDTO user) {
-        return UserMapper.toDTO(userService.updateUser(id, user));
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable Long id,
+            @RequestPart("user") UserUpdateDTO userUpdateDTO,
+            @RequestPart(value = "profilePicture", required = false) MultipartFile profilePicture
+    ) throws IOException {
+        User updatedUser = userService.updateUser(id, userUpdateDTO, profilePicture);
+        return ResponseEntity.ok(UserMapper.toDTO(updatedUser));
     }
 
     // ❌ Delete

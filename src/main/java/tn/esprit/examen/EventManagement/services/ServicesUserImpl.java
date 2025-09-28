@@ -58,23 +58,42 @@ public class ServicesUserImpl implements IServicesUser {
         return userRepository.save(user);
     }
 
-    @Override
-    public User updateUser(Long id, UserUpdateDTO dto) {
+    public User updateUser(Long id, UserUpdateDTO dto, MultipartFile profilePicture) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
-        if (dto.getLastName() != null) user.setLastName(dto.getLastName());
-        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
-        if (dto.getEmail() != null) user.setEmail(dto.getEmail());
-        if (dto.getPassword() != null){ user.setPassword(passwordEncoder.encode(dto.getPassword()));}
-        if (dto.getDateOfBirth() != null) user.setDateOfBirth(dto.getDateOfBirth());
-        if (dto.getGenre() != null) user.setGenre(Enum.valueOf(Genre.class, dto.getGenre()));
-        if (dto.getRole() != null) user.setRole(Enum.valueOf(Role.class, dto.getRole()));
-        if (dto.getOrganizedEvents() != null) user.setOrganizedEvents(dto.getOrganizedEvents());
-        if (dto.getReservations() != null) user.setReservations(dto.getReservations());
+        // ✏️ Update fields
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setGenre(Genre.valueOf(dto.getGenre()));
+
+        // ✅ Handle profile picture
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            try {
+                // Delete old picture if exists
+                if (user.getProfilePicture() != null) {
+                    Path oldPath = Paths.get("src/main/resources/static" + user.getProfilePicture());
+                    Files.deleteIfExists(oldPath);
+                }
+
+                // Save new picture
+                String fileName = System.currentTimeMillis() + "_" + profilePicture.getOriginalFilename();
+                Path path = Paths.get("src/main/resources/static/users/" + fileName);
+                Files.createDirectories(path.getParent());
+                Files.copy(profilePicture.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+                user.setProfilePicture("/users/" + fileName);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to update profile picture", e);
+            }
+        }
+
         return userRepository.save(user);
     }
+
 
     @Override
     public String deleteUser(Long id) {
