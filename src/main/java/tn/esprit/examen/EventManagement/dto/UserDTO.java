@@ -26,4 +26,5 @@ public class UserDTO {
     private List<EventSummaryDTO> organizedEvents;
     private List<ReservationDTO> reservations;
     private String profilePicture;
+    private String role;
 }

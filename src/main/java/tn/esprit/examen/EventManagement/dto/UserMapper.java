@@ -19,6 +19,7 @@ public class UserMapper {
                 .organizedEvents(EventMapper.toSummaryDTOList(user.getOrganizedEvents()))
                 .reservations(user.getReservations().stream().map(ReservationMapper::toDTO).collect(Collectors.toList()))
                 .profilePicture(user.getProfilePicture())
+                .role(String.valueOf(user.getRole()))
                 .build();
     }
 }

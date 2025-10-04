@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register","/auth/login","/api/user/all","/api/events/all","/events/**","/users/**").permitAll()
+                        .requestMatchers("/auth/register","/auth/login","/api/user/all","/api/events/all","/events/**","/users/**","/api/comments/event/**","/api/replies/comment/**"
+                        ,"/api/user/ById/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

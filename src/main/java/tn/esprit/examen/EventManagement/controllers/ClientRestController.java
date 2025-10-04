@@ -49,7 +49,7 @@ public class ClientRestController {
     }
 
     // 🔍 Get One
-    @GetMapping("/{id}")
+    @GetMapping("/ById/{id}")
     public UserDTO getUser(@PathVariable Long id) {
         return UserMapper.toDTO(userService.getUserById(id));
     }
