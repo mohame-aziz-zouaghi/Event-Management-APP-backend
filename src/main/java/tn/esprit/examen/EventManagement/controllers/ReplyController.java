@@ -1,10 +1,12 @@
 package tn.esprit.examen.EventManagement.controllers;
 
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.examen.EventManagement.dto.CommentDTO;
 import tn.esprit.examen.EventManagement.dto.ReplyDTO;
 import tn.esprit.examen.EventManagement.dto.ReplyMapper;
 import tn.esprit.examen.EventManagement.entities.Reply;
 import tn.esprit.examen.EventManagement.services.ReplyService;
+import tn.esprit.examen.EventManagement.services.ReplyServiceImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,10 +15,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/replies")
 public class ReplyController {
 
-    private final ReplyService replyService;
+    private final ReplyServiceImpl replyService;
 
-    public ReplyController(ReplyService replyService) {
+    public ReplyController(ReplyServiceImpl replyService) {
         this.replyService = replyService;
+    }
+
+    /** Endpoint to fetch all comments */
+    @GetMapping("/all")
+    public List<ReplyDTO> getAllComments() {
+        return replyService.getAllRepliess();
     }
 
     @PostMapping("/add/{userId}/{commentId}")

@@ -2,6 +2,10 @@ package tn.esprit.examen.EventManagement.services;
 
 
 import org.springframework.stereotype.Service;
+import tn.esprit.examen.EventManagement.dto.CommentDTO;
+import tn.esprit.examen.EventManagement.dto.CommentMapper;
+import tn.esprit.examen.EventManagement.dto.ReplyDTO;
+import tn.esprit.examen.EventManagement.dto.ReplyMapper;
 import tn.esprit.examen.EventManagement.entities.Comment;
 import tn.esprit.examen.EventManagement.entities.Reply;
 import tn.esprit.examen.EventManagement.entities.User;
@@ -11,6 +15,7 @@ import tn.esprit.examen.EventManagement.repositories.ReplyRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReplyServiceImpl implements ReplyService {
@@ -38,6 +43,15 @@ public class ReplyServiceImpl implements ReplyService {
 
         return replyRepository.save(reply);
     }
+
+    /** Get all replies  */
+    public List<ReplyDTO> getAllRepliess() {
+        List<Reply> replies = replyRepository.findAll();
+        return replies.stream()
+                .map(ReplyMapper::toDTO) // use your mapper to convert to DTO
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public Reply updateReply(Long replyId, String newContent) {

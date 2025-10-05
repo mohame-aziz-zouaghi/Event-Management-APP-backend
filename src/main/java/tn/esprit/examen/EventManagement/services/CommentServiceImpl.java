@@ -1,6 +1,9 @@
 package tn.esprit.examen.EventManagement.services;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import tn.esprit.examen.EventManagement.dto.CommentDTO;
+import tn.esprit.examen.EventManagement.dto.CommentMapper;
 import tn.esprit.examen.EventManagement.entities.Comment;
 import tn.esprit.examen.EventManagement.entities.Event;
 import tn.esprit.examen.EventManagement.entities.User;
@@ -10,6 +13,7 @@ import tn.esprit.examen.EventManagement.repositories.IUserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -36,6 +40,14 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreatedAt(LocalDateTime.now());
 
         return commentRepository.save(comment);
+    }
+
+    /** Get all comments */
+    public List<CommentDTO> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return comments.stream()
+                .map(CommentMapper::toDTO) // use your mapper to convert to DTO
+                .collect(Collectors.toList());
     }
 
     @Override

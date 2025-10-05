@@ -5,6 +5,7 @@ import tn.esprit.examen.EventManagement.dto.CommentDTO;
 import tn.esprit.examen.EventManagement.dto.CommentMapper;
 import tn.esprit.examen.EventManagement.entities.Comment;
 import tn.esprit.examen.EventManagement.services.CommentService;
+import tn.esprit.examen.EventManagement.services.CommentServiceImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +14,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/comments")
 public class CommentController {
 
-    private final CommentService commentService;
+    private final CommentServiceImpl commentService;
 
-    public CommentController(CommentService commentService) {
+    public CommentController(CommentServiceImpl commentService) {
         this.commentService = commentService;
     }
 
@@ -23,6 +24,13 @@ public class CommentController {
     public CommentDTO addComment(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody String content) {
         Comment comment = commentService.addComment(userId, eventId, content);
         return CommentMapper.toDTO(comment);
+    }
+
+
+    /** Endpoint to fetch all comments */
+    @GetMapping("/all")
+    public List<CommentDTO> getAllComments() {
+        return commentService.getAllComments();
     }
 
     @PutMapping("/update/{commentId}")
