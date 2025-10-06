@@ -3,6 +3,7 @@ package tn.esprit.examen.EventManagement.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.examen.EventManagement.dto.ReservationCalendarDTO;
 import tn.esprit.examen.EventManagement.dto.ReservationDTO;
 import tn.esprit.examen.EventManagement.services.ReservationService;
 
@@ -52,4 +53,16 @@ public class ReservationController {
         reservationService.cancelReservation(id);
         return ResponseEntity.ok("Reservation cancelled");
     }
+    @PutMapping("/confirm/{id}")
+    public ResponseEntity<String> confirm(@PathVariable Long id) {
+        reservationService.ApproveReservation(id);
+        return ResponseEntity.ok("Reservation Confirmed");
+    }
+
+    @GetMapping("/calendar/{userId}")
+    public ResponseEntity<List<ReservationCalendarDTO>> getUserCalendar(@PathVariable Long userId) {
+        List<ReservationCalendarDTO> calendar = reservationService.getUserCalendar(userId);
+        return ResponseEntity.ok(calendar);
+    }
+
 }

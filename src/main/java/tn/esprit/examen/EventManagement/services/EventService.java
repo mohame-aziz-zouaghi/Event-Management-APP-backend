@@ -30,7 +30,9 @@ public class EventService {
 
     private final IEventRepository eventRepository;
     private final IUserRepository userRepository;
+    private final ServicesUserImpl userService;
     private final EventPhotoRepository eventPhotoRepository;
+    private final MailService mailService;
 
 
     // Create Event
@@ -98,6 +100,7 @@ public class EventService {
                 eventPhotoRepository.save(eventPhoto);
             }
         }
+
 
         return mapToDTO(savedEvent);
     }
@@ -243,6 +246,7 @@ public class EventService {
         if (status == EventStatus.REJECTED && reason != null) {
             event.setRejectionReason(reason);
         }
+
 
         Event updatedEvent = eventRepository.save(event);
 

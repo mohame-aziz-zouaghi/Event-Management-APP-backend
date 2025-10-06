@@ -1,6 +1,7 @@
 package tn.esprit.examen.EventManagement.services;
 
 import org.springframework.stereotype.Service;
+import tn.esprit.examen.EventManagement.dto.ReservationCalendarDTO;
 import tn.esprit.examen.EventManagement.dto.ReservationDTO;
 import tn.esprit.examen.EventManagement.dto.ReservationMapper;
 import tn.esprit.examen.EventManagement.entities.*;
@@ -9,6 +10,7 @@ import tn.esprit.examen.EventManagement.repositories.IUserRepository;
 import tn.esprit.examen.EventManagement.repositories.ReservationRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +36,22 @@ public class ReservationService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        // Check if the user already reserved this event
-        boolean alreadyReserved = reservationRepository.existsByUserIdAndEventId(userId, eventId);
-        if (alreadyReserved) {
-            throw new RuntimeException("You have already reserved a spot for this event");
+// Check if the user already reserved this event with PENDING or CONFIRMED status
+        // Count total reservations for this event by this user
+        long totalReservations = reservationRepository.countByUserIdAndEventId(userId, eventId);
+
+        if (totalReservations >= 2) {
+            throw new RuntimeException("You already had multiple attempts reserving this event.");
         }
+
+        // Count active reservations
+        List<String> activeStatuses = Arrays.asList("PENDING", "CONFIRMED");
+        long activeCount = reservationRepository.countActiveReservations(userId, eventId, activeStatuses);
+
+        if (activeCount > 0) {
+            throw new RuntimeException("You already have an active reservation for this event.");
+        }
+
 
         // Check capacity
         long reservedCount = reservationRepository.findByEventId(eventId).size();
@@ -79,6 +92,13 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    public void ApproveReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+        reservation.setStatus(ReservationStatus.CONFIRMED);
+        reservationRepository.save(reservation);
+    }
+
     public List<ReservationDTO> getAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationMapper::toDTO)
@@ -96,6 +116,22 @@ public class ReservationService {
     public List<ReservationDTO> getReservationsByEventTitle(String title) {
         return reservationRepository.findByEvent_TitleContainingIgnoreCase(title).stream()
                 .map(ReservationMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<ReservationCalendarDTO> getUserCalendar(Long userId) {
+        List<Reservation> reservations = reservationRepository.findByUserId(userId);
+
+        return reservations.stream()
+                .map(r -> new ReservationCalendarDTO(
+                        r.getId(),
+                        r.getEvent().getId(),
+                        r.getEvent().getTitle(),
+                        r.getEvent().getStartDate(),
+                        r.getEvent().getEndDate(),
+                        r.getStatus().name() // PENDING, CANCELLED, CONFIRMED
+                ))
                 .collect(Collectors.toList());
     }
 }
