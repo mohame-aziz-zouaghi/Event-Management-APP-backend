@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.examen.EventManagement.dto.EventDTO;
+import tn.esprit.examen.EventManagement.entities.Event;
+import tn.esprit.examen.EventManagement.entities.EventStatus;
 import tn.esprit.examen.EventManagement.services.EventService;
 
 import java.io.IOException;
@@ -62,5 +64,24 @@ public class EventController {
     public ResponseEntity<String> deleteEvent(@PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.ok("Event deleted successfully");
+    }
+
+
+    // Approve or reject an event
+    @PutMapping("/{eventId}/approve")
+    public ResponseEntity<EventDTO> approveEvent(
+            @PathVariable Long eventId,
+            @RequestParam("status") String status,  // "APPROVED" or "REJECTED"
+            @RequestParam(value = "reason", required = false) String reason) {
+
+        EventStatus newStatus;
+        try {
+            newStatus = EventStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        EventDTO updatedEvent = eventService.updateEventStatus(eventId, newStatus, reason);
+        return ResponseEntity.ok(updatedEvent);
     }
 }

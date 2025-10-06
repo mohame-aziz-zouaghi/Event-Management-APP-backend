@@ -7,6 +7,7 @@ import tn.esprit.examen.EventManagement.dto.EventDTO;
 import tn.esprit.examen.EventManagement.dto.ReservationMapper;
 import tn.esprit.examen.EventManagement.entities.Event;
 import tn.esprit.examen.EventManagement.entities.EventPhoto;
+import tn.esprit.examen.EventManagement.entities.EventStatus;
 import tn.esprit.examen.EventManagement.entities.User;
 import tn.esprit.examen.EventManagement.repositories.EventPhotoRepository;
 import tn.esprit.examen.EventManagement.repositories.IEventRepository;
@@ -234,6 +235,31 @@ public class EventService {
 
 
 
+    public EventDTO updateEventStatus(Long eventId, EventStatus status, String reason) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        event.setStatus(status);
+        if (status == EventStatus.REJECTED && reason != null) {
+            event.setRejectionReason(reason);
+        }
+
+        Event updatedEvent = eventRepository.save(event);
+
+        // Map to DTO
+        EventDTO dto = new EventDTO();
+        dto.setId(updatedEvent.getId());
+        dto.setTitle(updatedEvent.getTitle());
+        dto.setDescription(updatedEvent.getDescription());
+        dto.setLocation(updatedEvent.getLocation());
+        dto.setStartDate(updatedEvent.getStartDate());
+        dto.setEndDate(updatedEvent.getEndDate());
+        dto.setCapacity(updatedEvent.getCapacity());
+        dto.setStatus(updatedEvent.getStatus().name());
+        dto.setRejectionReason(updatedEvent.getRejectionReason());
+        dto.setOrganizerId(updatedEvent.getOrganizer().getId());
+        return dto;
+    }
 
 
 
@@ -281,7 +307,9 @@ public class EventService {
                         : List.of(),
                 event.getPhotos() != null
                         ? event.getPhotos().stream().map(EventPhoto::getUrl).collect(Collectors.toList())
-                        : List.of()
+                        : List.of(),
+                event.getStatus().name(),
+                event.getRejectionReason()
         );
     }
 }

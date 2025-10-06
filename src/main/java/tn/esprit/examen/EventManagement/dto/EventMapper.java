@@ -28,7 +28,9 @@ public class EventMapper {
                         : List.of(),
                 event.getPhotos() != null
                         ? event.getPhotos().stream().map(EventPhoto::getUrl).collect(Collectors.toList())
-                        : List.of()
+                        : List.of(),
+                event.getStatus().name(),
+                event.getRejectionReason()
         );
     }
 

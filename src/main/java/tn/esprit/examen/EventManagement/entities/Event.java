@@ -56,6 +56,11 @@ public class Event {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Column(nullable = false)
+    private EventStatus Status = EventStatus.PENDING;
+
+    private String RejectionReason;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

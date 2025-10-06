@@ -24,5 +24,6 @@ public class EventDTO {
     private LocalDateTime updatedAt;// Link to User who organizes
     private List<ReservationDTO> reservations;
     private List<String> photoUrls;
-
+    private String Status;
+    private String RejectionReason;
 }
